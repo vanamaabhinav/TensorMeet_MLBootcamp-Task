@@ -81,13 +81,13 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.header("Configuration")
-api_key_input = st.sidebar.text_input("Gemini API Key", type="password", value=os.environ.get("GEMINI_API_KEY", ""))
+st.markdown("### Configuration")
+api_key_input = st.text_input("Gemini API Key", type="password", value=os.environ.get("GEMINI_API_KEY", ""), help="Required to process the audio and generate minutes.")
 if api_key_input:
     os.environ["GEMINI_API_KEY"] = api_key_input
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### Supported formats\n`.mp3`, `.wav`, `.m4a`, `.ogg`, `.flac`")
+st.markdown("---")
+st.markdown("### Supported formats\n`.mp3`, `.wav`, `.m4a`, `.ogg`, `.flac`")
 
 uploaded_file = st.file_uploader("Upload Meeting Recording", type=['mp3', 'wav', 'm4a', 'ogg', 'flac'])
 
