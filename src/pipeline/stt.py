@@ -16,15 +16,26 @@ class WhisperTranscriber:
             import imageio_ffmpeg
             import shutil
             
+            import tempfile
+            
             ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
-            ffmpeg_dir = os.path.dirname(ffmpeg_exe)
-            ffmpeg_alias = os.path.join(ffmpeg_dir, "ffmpeg.exe")
+            
+            # Create a writable temporary directory to hold our ffmpeg alias
+            temp_bin_dir = os.path.join(tempfile.gettempdir(), "ffmpeg_bin")
+            os.makedirs(temp_bin_dir, exist_ok=True)
+            
+            # Windows requires .exe, Linux just needs 'ffmpeg'
+            alias_name = "ffmpeg.exe" if os.name == 'nt' else "ffmpeg"
+            ffmpeg_alias = os.path.join(temp_bin_dir, alias_name)
             
             if not os.path.exists(ffmpeg_alias):
                 shutil.copy(ffmpeg_exe, ffmpeg_alias)
+                # Ensure it has execute permissions on Linux
+                if os.name != 'nt':
+                    os.chmod(ffmpeg_alias, 0o755)
                 
-            if ffmpeg_dir not in os.environ["PATH"]:
-                os.environ["PATH"] = ffmpeg_dir + os.pathsep + os.environ["PATH"]
+            if temp_bin_dir not in os.environ["PATH"]:
+                os.environ["PATH"] = temp_bin_dir + os.pathsep + os.environ["PATH"]
             
             self.model = whisper.load_model(self.model_size, device=self.device)
 
