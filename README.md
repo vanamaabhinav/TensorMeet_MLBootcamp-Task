@@ -1,6 +1,8 @@
-# AI-Powered Meeting Assistant
+# TensorMeet - AI-Powered Meeting Assistant
 
 **Inter IIT Tech Meet 15.0 Bootcamp - AI-Powered Meeting Assistant**
+
+🟢 **Live Demo:** [https://tensormeet.streamlit.app/](https://tensormeet.streamlit.app/)
 
 An end-to-end multi-modal pipeline built with Streamlit, OpenAI Whisper, and Google Gemini to convert meeting audio into actionable insights.
 
@@ -24,7 +26,7 @@ An end-to-end multi-modal pipeline built with Streamlit, OpenAI Whisper, and Goo
    ```env
    GEMINI_API_KEY="your_api_key_here"
    ```
-   *Note: You can also enter the API key directly in the Streamlit Sidebar!*
+   *Note: If you don't use a `.env` file, you can also paste your API key securely into the main dashboard of the application when it launches!*
 
 ## Run the Application
 
@@ -35,10 +37,10 @@ python -m streamlit run app.py
 ## Architecture & Models
 
 1. **Stage 1: Speech-to-Text (`openai-whisper`)**
-   - Transcribes spoken audio into a raw text format.
-2. **Stage 2: Transcript Refinement (`gemini-2.5-flash`)**
+   - Transcribes spoken audio into a raw text format using a local Whisper model.
+2. **Stage 2: Transcript Refinement (`gemini-3.5-flash-lite`)**
    - Takes the raw text and applies domain-specific error correction via a strict system prompt.
-3. **Stage 3: Documentation Generator (`gemini-2.5-flash`)**
+3. **Stage 3: Documentation Generator (`gemini-3.5-flash-lite`)**
    - Utilizes Pydantic schema generation to enforce strict extraction of Meeting Minutes, Key Decisions, and Action Items.
 
 ## Evaluation Rubric Alignment
