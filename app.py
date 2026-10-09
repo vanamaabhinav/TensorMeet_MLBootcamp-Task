@@ -82,7 +82,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("### Configuration")
-api_key_input = st.text_input("Gemini API Key", type="password", value=os.environ.get("GEMINI_API_KEY", ""), help="Required to process the audio and generate minutes.")
+api_key_input = st.text_input("Gemini API Key", type="password", help="Enter your own key, or leave blank to use the server's default key.")
+actual_api_key = api_key_input if api_key_input else os.environ.get("GEMINI_API_KEY", "")
 
 st.markdown("---")
 st.markdown("### Supported formats\n`.mp3`, `.wav`, `.m4a`, `.ogg`, `.flac`")
@@ -97,8 +98,8 @@ if uploaded_file is not None:
         st.audio(uploaded_file)
         
         if st.button("Process Meeting Recording"):
-            if not api_key_input:
-                st.error("Please enter a Gemini API Key in the sidebar to proceed.")
+            if not actual_api_key:
+                st.error("Please enter a Gemini API Key to proceed, or configure it on the server.")
             else:
                 with st.status("Processing Meeting...", expanded=True) as status:
                     st.write("Saving audio file...")
@@ -112,11 +113,11 @@ if uploaded_file is not None:
                         raw_transcript = transcriber.transcribe(tmp_audio_path)
                         
                         st.write("Stage 2: Refining Transcript with Gemini...")
-                        refiner = TranscriptRefiner(api_key=api_key_input)
+                        refiner = TranscriptRefiner(api_key=actual_api_key)
                         refined_transcript = refiner.refine(raw_transcript)
                         
                         st.write("Stage 3: Generating Minutes & Actions...")
-                        generator = MeetingDocumentationGenerator(api_key=api_key_input)
+                        generator = MeetingDocumentationGenerator(api_key=actual_api_key)
                         record = generator.generate(refined_transcript)
                         
                         status.update(label="Processing Complete!", state="complete", expanded=False)
