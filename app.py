@@ -83,8 +83,6 @@ st.markdown("""
 
 st.markdown("### Configuration")
 api_key_input = st.text_input("Gemini API Key", type="password", value=os.environ.get("GEMINI_API_KEY", ""), help="Required to process the audio and generate minutes.")
-if api_key_input:
-    os.environ["GEMINI_API_KEY"] = api_key_input
 
 st.markdown("---")
 st.markdown("### Supported formats\n`.mp3`, `.wav`, `.m4a`, `.ogg`, `.flac`")
@@ -114,11 +112,11 @@ if uploaded_file is not None:
                         raw_transcript = transcriber.transcribe(tmp_audio_path)
                         
                         st.write("Stage 2: Refining Transcript with Gemini...")
-                        refiner = TranscriptRefiner()
+                        refiner = TranscriptRefiner(api_key=api_key_input)
                         refined_transcript = refiner.refine(raw_transcript)
                         
                         st.write("Stage 3: Generating Minutes & Actions...")
-                        generator = MeetingDocumentationGenerator()
+                        generator = MeetingDocumentationGenerator(api_key=api_key_input)
                         record = generator.generate(refined_transcript)
                         
                         status.update(label="Processing Complete!", state="complete", expanded=False)

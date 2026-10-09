@@ -2,8 +2,11 @@ from google import genai
 from google.genai import types
 
 class TranscriptRefiner:
-    def __init__(self):
-        self.client = genai.Client()
+    def __init__(self, api_key=None):
+        if api_key:
+            self.client = genai.Client(api_key=api_key)
+        else:
+            self.client = genai.Client()
         self.model_id = "gemini-3.5-flash-lite"
 
     def refine(self, raw_transcript: str) -> str:

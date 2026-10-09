@@ -14,8 +14,11 @@ class MeetingRecord(BaseModel):
     action_items: list[ActionItem] = Field(description="List of actionable tasks.")
 
 class MeetingDocumentationGenerator:
-    def __init__(self):
-        self.client = genai.Client()
+    def __init__(self, api_key=None):
+        if api_key:
+            self.client = genai.Client(api_key=api_key)
+        else:
+            self.client = genai.Client()
         self.model_id = "gemini-3.5-flash-lite"
 
     def generate(self, refined_transcript: str) -> MeetingRecord:
